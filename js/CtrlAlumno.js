@@ -12,7 +12,7 @@ import {
 import {
   tieneRol
 } from "./seguridad.js";
-
+ 
 const daoAlumno =
   getFirestore().
     collection("Alumno");
@@ -22,10 +22,10 @@ const params =
 const id = params.get("id");
 /** @type {HTMLFormElement} */
 const forma = document["forma"];
-
+ 
 getAuth().onAuthStateChanged(
   protege, muestraError);
-
+ 
 /** @param {import(
     "../lib/tiposFire.js").User}
     usuario */
@@ -35,7 +35,7 @@ async function protege(usuario) {
     busca();
   }
 }
-
+ 
 /** Busca y muestra los datos que
  * corresponden al id recibido. */
 async function busca() {
@@ -51,6 +51,9 @@ async function busca() {
                   Alumno} */
       const data = doc.data();
       forma.matricula.value = data.matricula;
+      forma.telefono.value = data.telefono;
+      forma.grupo.value = data.grupo;
+      forma.fecha.value = data.fecha;
       forma.nombre.value =
         data.nombre || "";
       forma.addEventListener(
@@ -67,7 +70,7 @@ async function busca() {
     muestraAlumnos();
   }
 }
-
+ 
 /** @param {Event} evt */
 async function guarda(evt) {
   try {
@@ -78,13 +81,24 @@ async function guarda(evt) {
         formData, "matricula").trim();  
     const nombre = getString(
       formData, "nombre").trim();
+      const telefono = getString(
+        formData, "telefono").trim(); 
+        const grupo = getString(
+          formData, "grupo").trim();
+          const fecha = getString(
+            formData, "fecha").trim();  
+        
+ 
     /**
      * @type {
         import("./tipos.js").
                 Alumno} */
     const modelo = {
       matricula, 
-      nombre
+      nombre,
+      telefono,
+      grupo,
+      fecha
     };
     await daoAlumno.
       doc(id).
@@ -94,7 +108,7 @@ async function guarda(evt) {
     muestraError(e);
   }
 }
-
+ 
 async function elimina() {
   try {
     if (confirm("Confirmar la " +
